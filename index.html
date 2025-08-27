@@ -90,27 +90,25 @@
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
+        /* --- Mudanças aqui para a centralização --- */
         .add-item-form {
             display: flex;
             gap: 10px;
             margin-bottom: 25px;
-            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+            align-items: center; /* Centraliza verticalmente todos os itens */
+            flex-wrap: wrap; 
         }
         
         .add-item-form input {
-            flex: 1;
+            flex: 1; /* Todos os inputs ocupam espaço igual */
             padding: 14px;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
             font-size: 1em;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
+        /* Remoção das regras de largura fixa aqui para inputs */
 
-        /* Ajustes iniciais para inputs, serão sobrescritos por media query em telas pequenas */
-        #item-name { flex: 2; }
-        #item-price { width: 90px; } /* Largura fixa para telas maiores */
-        #item-quantity { width: 90px; } /* Largura fixa para telas maiores */
-        
         .add-item-form input:focus {
             outline: none;
             border-color: var(--primary-color);
@@ -136,6 +134,7 @@
             background-color: var(--primary-dark);
             transform: translateY(-2px);
         }
+        /* --- Fim das mudanças --- */
 
         .item-list {
             list-style: none;
@@ -169,13 +168,13 @@
         .item-details {
             display: flex;
             flex-direction: column;
-            flex-grow: 1; /* Permite que os detalhes do item ocupem o espaço disponível */
+            flex-grow: 1; 
         }
 
         .item-details .name {
             font-weight: 600;
             font-size: 1.1em;
-            word-break: break-word; /* Quebra palavras longas */
+            word-break: break-word;
         }
 
         .item-details .price {
@@ -186,7 +185,7 @@
         .item-actions {
             display: flex;
             align-items: center;
-            flex-shrink: 0; /* Impede que os botões diminuam */
+            flex-shrink: 0;
         }
 
         .item-actions button {
@@ -196,7 +195,7 @@
             font-size: 1.2em;
             margin-left: 10px;
             transition: color 0.3s, transform 0.2s;
-            padding: 5px; /* Adicionado padding para facilitar o clique em mobile */
+            padding: 5px;
         }
 
         .item-actions .toggle-btn { color: var(--primary-color); }
@@ -213,7 +212,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
-            flex-wrap: wrap; /* Permite que os botões quebrem em telas pequenas */
+            flex-wrap: wrap; 
         }
 
         .action-buttons button, .nav-buttons button {
@@ -250,12 +249,12 @@
             margin-bottom: 8px;
             background-color: #fdfdfd;
             font-size: 0.95em;
-            flex-wrap: wrap; /* Permite que o conteúdo da viagem quebre */
+            flex-wrap: wrap;
         }
         
         .trip-item > div {
-            flex-grow: 1; /* Permite que o texto ocupe o espaço */
-            margin-right: 10px; /* Espaço entre texto e botão */
+            flex-grow: 1; 
+            margin-right: 10px; 
         }
 
         .trip-item .trip-total {
@@ -271,7 +270,7 @@
             cursor: pointer;
             font-size: 0.8em;
             transition: background-color 0.3s;
-            flex-shrink: 0; /* Evita que o botão diminua em telas pequenas */
+            flex-shrink: 0;
         }
         
         .trip-item button:hover {
@@ -280,7 +279,7 @@
 
         .screen {
             display: none;
-            padding-top: 0px; /* Ajuste para dar mais espaço acima do conteúdo */
+            padding-top: 0px; 
         }
 
         .screen.active {
@@ -289,14 +288,13 @@
 
         .nav-buttons {
             position: absolute;
-            top: 15px; /* Ajustado para um pouco mais de respiro */
-            right: 15px; /* Ajustado para um pouco mais de respiro */
+            top: 15px; 
+            right: 15px;
             display: flex;
-            gap: 8px; /* Reduzido o gap para telas menores */
-            z-index: 10; /* Garante que os botões fiquem acima de outros elementos */
+            gap: 8px; 
+            z-index: 10;
         }
 
-        /* Estilos do Modal Personalizado */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -386,96 +384,96 @@
             transform: translateY(-2px);
         }
 
-
-        /* Media query para telas de celular (até 480px de largura) */
+        /* --- Media query para telas de celular (até 480px de largura) --- */
         @media (max-width: 480px) {
             body {
-                padding: 15px; /* Reduzir o padding geral do corpo */
+                padding: 15px;
             }
 
             .container {
-                padding: 30px 20px; /* Ajustar padding do container */
-                border-radius: 15px; /* Suavizar os cantos */
+                padding: 30px 20px;
+                border-radius: 15px;
             }
 
             h1 {
-                font-size: 2em; /* Reduzir tamanho do título principal */
-                margin-top: 10px; /* Ajustar margem superior */
+                font-size: 2em;
+                margin-top: 10px;
             }
             
             .nav-buttons {
-                position: static; /* Remove a posição absoluta */
-                margin-bottom: 20px; /* Adiciona margem abaixo dos botões de navegação */
-                justify-content: space-around; /* Distribui os botões igualmente */
+                position: static;
+                margin-bottom: 20px;
+                justify-content: space-around;
                 width: 100%;
             }
 
             .nav-buttons button {
-                flex: 1; /* Faz os botões ocuparem espaço igual */
-                padding: 10px 15px; /* Ajusta o padding */
-                font-size: 0.9em; /* Reduz o tamanho da fonte */
-                white-space: nowrap; /* Evita que o texto do botão quebre */
+                flex: 1;
+                padding: 10px 15px;
+                font-size: 0.9em;
+                white-space: nowrap;
             }
 
             .total-display {
-                font-size: 1.5em; /* Reduz o tamanho da fonte do total */
+                font-size: 1.5em;
                 padding: 15px;
             }
 
             .add-item-form {
-                flex-direction: column; /* Coloca os inputs um abaixo do outro */
-                gap: 10px; /* Espaçamento entre os campos */
+                flex-direction: column; /* Inputs um abaixo do outro */
+                gap: 10px;
+                flex-wrap: nowrap; /* Impede quebra de linha desnecessária */
             }
 
             .add-item-form input,
             .add-item-form button {
-                width: 100%; /* Fazem os campos ocuparem a largura total */
-                flex: none; /* Remove a flexibilidade */
+                width: 100%; /* Fazem os campos e o botão ocuparem a largura total */
+                flex: none;
             }
             
             .add-item-form button {
-                margin-top: 5px; /* Adiciona uma pequena margem superior no botão */
+                margin-top: 5px; 
             }
 
             .item {
-                flex-direction: column; /* Coloca detalhes e ações em linhas separadas */
-                align-items: flex-start; /* Alinha o conteúdo à esquerda */
+                flex-direction: column;
+                align-items: flex-start;
                 padding: 12px;
             }
 
             .item-details {
-                margin-bottom: 10px; /* Espaço entre os detalhes e as ações */
+                margin-bottom: 10px;
             }
 
             .item-actions {
-                width: 100%; /* Ocupa a largura total para os botões */
-                justify-content: flex-end; /* Alinha os botões à direita */
+                width: 100%;
+                justify-content: flex-end;
             }
             
             .action-buttons button {
-                width: 100%; /* Faz os botões de ação ocuparem a largura total */
+                width: 100%;
             }
 
             .trip-item {
-                flex-direction: column; /* Coloca data/total e botão em linhas separadas */
+                flex-direction: column;
                 align-items: flex-start;
             }
 
             .trip-item > div {
-                margin-bottom: 10px; /* Espaço entre o texto e o botão */
+                margin-bottom: 10px;
             }
 
             .trip-item button {
-                width: 100%; /* Faz o botão ocupar a largura total */
+                width: 100%;
             }
 
             .custom-modal {
                 padding: 20px;
-                width: 85%; /* Ajusta a largura do modal em telas pequenas */
+                width: 85%;
             }
 
             .custom-modal-actions {
-                flex-direction: column; /* Botões de ação do modal um abaixo do outro */
+                flex-direction: column;
                 gap: 10px;
             }
         }
@@ -558,7 +556,6 @@
         const listNavBtn = document.getElementById('list-nav-btn');
         const chartsNavBtn = document.getElementById('charts-nav-btn');
 
-        // Elementos do Modal Personalizado
         const confirmModal = document.getElementById('confirmModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
@@ -570,7 +567,6 @@
 
         let myChart;
 
-        // Função para exibir o modal personalizado
         function showCustomConfirm(title, message, onConfirm) {
             modalTitle.textContent = title;
             modalMessage.textContent = message;
