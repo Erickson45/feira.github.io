@@ -33,7 +33,6 @@
             --danger-dark: #b91c1c;
         }
 
-        /* --- NOVO --- Correção do Box Model para responsividade */
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -109,7 +108,7 @@
             border-radius: 12px;
             font-size: 1em;
             transition: border-color 0.3s, box-shadow 0.3s;
-            min-width: 80px; /* Adicionado para evitar que os campos fiquem muito pequenos antes de quebrar a linha */
+            min-width: 80px;
         }
 
         #item-name { flex-grow: 2; }
@@ -172,7 +171,6 @@
         .item-details {
             display: flex;
             flex-direction: column;
-            /* Garante que o texto quebre se for muito longo */
             word-break: break-word;
             flex: 1;
         }
@@ -215,7 +213,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
-            flex-wrap: wrap; /* --- AJUSTADO --- Para quebrar em telas menores */
+            flex-wrap: wrap;
         }
 
         .action-buttons button, .nav-buttons button {
@@ -289,7 +287,6 @@
             gap: 10px;
         }
 
-        /* Estilos do Modal Personalizado */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -379,16 +376,17 @@
             transform: translateY(-2px);
         }
 
-
-        @media (max-width: 480px) {
+        /* --- SEÇÃO MODIFICADA PARA MELHOR RESPONSIVIDADE --- */
+        @media (max-width: 620px) {
             .add-item-form {
                 flex-direction: column;
-                gap: 10px; /* --- AJUSTADO --- Para melhor espaçamento */
+                align-items: center; /* <<< ESSA É A MUDANÇA PRINCIPAL: Centraliza os itens */
+                gap: 12px; 
             }
 
             .add-item-form input, .add-item-form button {
-                width: 100%;
-                margin-top: 0; 
+                width: 95%; /* Define uma largura um pouco menor que 100% para a centralização ser visível */
+                max-width: 400px; /* Garante que não fiquem largos demais em telas de tablet */
             }
             
             .custom-modal {
