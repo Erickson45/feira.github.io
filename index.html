@@ -33,6 +33,11 @@
             --danger-dark: #b91c1c;
         }
 
+        /* --- NOVO --- Correção do Box Model para responsividade */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
@@ -43,7 +48,7 @@
             align-items: center;
             min-height: 100vh;
             color: var(--text-color);
-            position: relative;
+            position: relative; 
         }
 
         .container {
@@ -90,13 +95,11 @@
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* --- Estilo para o formulário de adição de itens --- */
         .add-item-form {
             display: flex;
             gap: 10px;
             margin-bottom: 25px;
-            flex-wrap: wrap; 
-            align-items: center; 
+            flex-wrap: wrap;
         }
         
         .add-item-form input {
@@ -106,8 +109,11 @@
             border-radius: 12px;
             font-size: 1em;
             transition: border-color 0.3s, box-shadow 0.3s;
+            min-width: 80px; /* Adicionado para evitar que os campos fiquem muito pequenos antes de quebrar a linha */
         }
 
+        #item-name { flex-grow: 2; }
+        
         .add-item-form input:focus {
             outline: none;
             border-color: var(--primary-color);
@@ -133,7 +139,6 @@
             background-color: var(--primary-dark);
             transform: translateY(-2px);
         }
-        /* --- Fim do estilo do formulário --- */
 
         .item-list {
             list-style: none;
@@ -167,24 +172,24 @@
         .item-details {
             display: flex;
             flex-direction: column;
-            flex-grow: 1; 
+            /* Garante que o texto quebre se for muito longo */
+            word-break: break-word;
+            flex: 1;
         }
 
         .item-details .name {
             font-weight: 600;
             font-size: 1.1em;
-            word-break: break-word;
         }
 
         .item-details .price {
             font-size: 0.9em;
             color: #6b7280;
         }
-
+        
         .item-actions {
             display: flex;
             align-items: center;
-            flex-shrink: 0;
         }
 
         .item-actions button {
@@ -194,7 +199,6 @@
             font-size: 1.2em;
             margin-left: 10px;
             transition: color 0.3s, transform 0.2s;
-            padding: 5px;
         }
 
         .item-actions .toggle-btn { color: var(--primary-color); }
@@ -211,7 +215,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
-            flex-wrap: wrap; 
+            flex-wrap: wrap; /* --- AJUSTADO --- Para quebrar em telas menores */
         }
 
         .action-buttons button, .nav-buttons button {
@@ -248,14 +252,8 @@
             margin-bottom: 8px;
             background-color: #fdfdfd;
             font-size: 0.95em;
-            flex-wrap: wrap;
         }
         
-        .trip-item > div {
-            flex-grow: 1; 
-            margin-right: 10px; 
-        }
-
         .trip-item .trip-total {
             font-weight: 600;
         }
@@ -269,7 +267,6 @@
             cursor: pointer;
             font-size: 0.8em;
             transition: background-color 0.3s;
-            flex-shrink: 0;
         }
         
         .trip-item button:hover {
@@ -278,7 +275,6 @@
 
         .screen {
             display: none;
-            padding-top: 0px; 
         }
 
         .screen.active {
@@ -287,13 +283,13 @@
 
         .nav-buttons {
             position: absolute;
-            top: 15px; 
-            right: 15px;
+            top: 20px;
+            right: 20px;
             display: flex;
-            gap: 8px; 
-            z-index: 10;
+            gap: 10px;
         }
 
+        /* Estilos do Modal Personalizado */
         .custom-modal-overlay {
             position: fixed;
             top: 0;
@@ -383,93 +379,20 @@
             transform: translateY(-2px);
         }
 
-        /* --- Media query para telas de celular (até 480px de largura) --- */
+
         @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-
-            .container {
-                padding: 30px 20px;
-                border-radius: 15px;
-            }
-
-            h1 {
-                font-size: 2em;
-                margin-top: 10px;
-            }
-            
-            .nav-buttons {
-                position: static;
-                margin-bottom: 20px;
-                justify-content: space-around;
-                width: 100%;
-            }
-
-            .nav-buttons button {
-                flex: 1;
-                padding: 10px 15px;
-                font-size: 0.9em;
-                white-space: nowrap;
-            }
-
-            .total-display {
-                font-size: 1.5em;
-                padding: 15px;
-            }
-
             .add-item-form {
-                flex-direction: column; /* Inputs um abaixo do outro */
-                gap: 10px;
-                flex-wrap: nowrap;
-                align-items: stretch; /* Alinha os itens para a largura total */
+                flex-direction: column;
+                gap: 10px; /* --- AJUSTADO --- Para melhor espaçamento */
             }
 
-            .add-item-form input,
-            .add-item-form button {
-                width: 100%; /* Fazem os campos e o botão ocuparem a largura total */
-                flex: none;
+            .add-item-form input, .add-item-form button {
+                width: 100%;
+                margin-top: 0; 
             }
             
-            .add-item-form button {
-                margin-top: 5px; 
-            }
-
-            .item {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 12px;
-            }
-
-            .item-details {
-                margin-bottom: 10px;
-            }
-
-            .item-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .action-buttons button {
-                width: 100%;
-            }
-
-            .trip-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .trip-item > div {
-                margin-bottom: 10px;
-            }
-
-            .trip-item button {
-                width: 100%;
-            }
-
             .custom-modal {
                 padding: 20px;
-                width: 85%;
             }
 
             .custom-modal-actions {
@@ -555,7 +478,6 @@
         const chartsScreen = document.getElementById('charts-screen');
         const listNavBtn = document.getElementById('list-nav-btn');
         const chartsNavBtn = document.getElementById('charts-nav-btn');
-
         const confirmModal = document.getElementById('confirmModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
@@ -564,7 +486,6 @@
 
         let items = JSON.parse(localStorage.getItem('currentTripItems')) || [];
         let trips = JSON.parse(localStorage.getItem('previousTrips')) || [];
-
         let myChart;
 
         function showCustomConfirm(title, message, onConfirm) {
@@ -617,7 +538,6 @@
                     itemList.appendChild(li);
                 });
             }
-
             updateTotal();
             saveCurrentTrip();
         }
@@ -667,7 +587,7 @@
             const date = new Date().toLocaleDateString('pt-BR');
             const total = totalValueSpan.textContent;
             
-            trips.push({ date, total, items: items });
+            trips.push({ date, total, items: [...items] });
             localStorage.setItem('previousTrips', JSON.stringify(trips));
             
             items = [];
@@ -714,21 +634,20 @@
             event.preventDefault();
 
             const name = itemNameInput.value.trim();
-            const price = parseFloat(itemPriceInput.value).toFixed(2);
+            const price = parseFloat(itemPriceInput.value);
             const quantity = parseInt(itemQuantityInput.value);
 
-            if (name && !isNaN(price) && !isNaN(quantity) && quantity > 0) {
+            if (name && !isNaN(price) && price >= 0 && !isNaN(quantity) && quantity > 0) {
                 const newItem = {
                     id: Date.now(),
                     name: name,
-                    price: price,
+                    price: price.toFixed(2),
                     quantity: quantity,
                     isPurchased: false
                 };
                 items.push(newItem);
-                itemNameInput.value = '';
-                itemPriceInput.value = '';
-                itemQuantityInput.value = '1';
+                addForm.reset();
+                itemNameInput.focus();
                 renderItems();
             } else {
                 alert('Por favor, preencha todos os campos corretamente.');
@@ -740,26 +659,30 @@
             if (!target) return;
 
             const itemId = parseInt(target.dataset.id);
+            const itemIndex = items.findIndex(item => item.id === itemId);
+            if (itemIndex === -1) return;
             
             if (target.classList.contains('remove-btn')) {
-                items = items.filter(item => item.id !== itemId);
+                items.splice(itemIndex, 1);
             } else if (target.classList.contains('toggle-btn')) {
-                const itemToToggle = items.find(item => item.id === itemId);
-                if (itemToToggle) {
-                    itemToToggle.isPurchased = !itemToToggle.isPurchased;
-                }
+                items[itemIndex].isPurchased = !items[itemIndex].isPurchased;
             } else if (target.classList.contains('edit-btn')) {
-                const itemToEdit = items.find(item => item.id === itemId);
-                if (itemToEdit) {
-                    const newName = prompt("Editar nome:", itemToEdit.name);
-                    const newPrice = prompt("Editar preço:", itemToEdit.price);
-                    const newQuantity = prompt("Editar quantidade:", itemToEdit.quantity);
+                const itemToEdit = items[itemIndex];
+                const newName = prompt("Editar nome:", itemToEdit.name);
+                if (newName !== null && newName.trim() !== '') {
+                    itemToEdit.name = newName.trim();
+                }
 
-                    if (newName !== null && newPrice !== null && newQuantity !== null) {
-                        itemToEdit.name = newName;
-                        itemToEdit.price = parseFloat(newPrice).toFixed(2);
-                        itemToEdit.quantity = parseInt(newQuantity);
-                    }
+                const newPrice = prompt("Editar preço unitário:", itemToEdit.price);
+                const parsedPrice = parseFloat(newPrice);
+                if (newPrice !== null && !isNaN(parsedPrice) && parsedPrice >= 0) {
+                    itemToEdit.price = parsedPrice.toFixed(2);
+                }
+
+                const newQuantity = prompt("Editar quantidade:", itemToEdit.quantity);
+                const parsedQuantity = parseInt(newQuantity);
+                if (newQuantity !== null && !isNaN(parsedQuantity) && parsedQuantity > 0) {
+                    itemToEdit.quantity = parsedQuantity;
                 }
             }
             renderItems();
@@ -786,13 +709,16 @@
 
             trips.forEach(trip => {
                 const [day, month, year] = trip.date.split('/');
-                const monthYear = `${months[parseInt(month) - 1]}/${year}`;
+                const monthIndex = parseInt(month, 10) - 1;
+                const monthYear = `${months[monthIndex]}/${year}`;
                 const total = parseFloat(trip.total);
 
-                if (monthlyTotals[monthYear]) {
-                    monthlyTotals[monthYear] += total;
-                } else {
-                    monthlyTotals[monthYear] = total;
+                if (!isNaN(total)) {
+                     if (monthlyTotals[monthYear]) {
+                        monthlyTotals[monthYear] += total;
+                    } else {
+                        monthlyTotals[monthYear] = total;
+                    }
                 }
             });
 
