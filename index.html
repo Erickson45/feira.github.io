@@ -9,11 +9,11 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('./service-worker.js')
                     .then(reg => console.log('Service Worker registrado com sucesso!'))
                     .catch(err => console.error('Erro ao registrar o Service Worker:', err));
             });
@@ -29,6 +29,8 @@
             --background-color: #f7fbf8;
             --card-bg: #ffffff;
             --shadow-color: rgba(0, 0, 0, 0.1);
+            --danger-color: #ef4444;
+            --danger-dark: #b91c1c;
         }
 
         body {
@@ -41,6 +43,7 @@
             align-items: center;
             min-height: 100vh;
             color: var(--text-color);
+            position: relative; /* Para o modal */
         }
 
         .container {
@@ -189,8 +192,8 @@
         .item-actions .toggle-btn { color: var(--primary-color); }
         .item-actions .toggle-btn:hover { color: var(--primary-dark); transform: scale(1.1); }
 
-        .item-actions .remove-btn { color: #ef4444; }
-        .item-actions .remove-btn:hover { color: #b91c1c; transform: scale(1.1); }
+        .item-actions .remove-btn { color: var(--danger-color); }
+        .item-actions .remove-btn:hover { color: var(--danger-dark); transform: scale(1.1); }
         
         .item-actions .edit-btn { color: #f9b100; }
         .item-actions .edit-btn:hover { color: #e6a000; transform: scale(1.1); }
@@ -273,12 +276,119 @@
             gap: 10px;
         }
 
+        /* Estilos do Modal Personalizado */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+
+        .custom-modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .custom-modal-overlay.visible .custom-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .custom-modal h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .custom-modal p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .custom-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .custom-modal-actions button {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .custom-modal-actions .confirm-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .custom-modal-actions .confirm-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .custom-modal-actions .cancel-btn {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            border: none;
+        }
+
+        .custom-modal-actions .cancel-btn:hover {
+            background-color: #c0c0c0;
+            transform: translateY(-2px);
+        }
+
+
         @media (max-width: 480px) {
             .add-item-form {
-                flex-direction: column;
+                flex-direction: column; /* Volta para coluna em telas muito pequenas */
+                gap: 5px;
             }
-            .add-item-form input {
+
+            .add-item-form input, .add-item-form button {
                 width: 100%;
+                margin-top: 0; /* Remove margem extra */
+            }
+
+            #item-name { width: 100%; }
+            #item-price { width: 100%; }
+            #item-quantity { width: 100%; }
+            
+            .custom-modal {
+                padding: 20px;
+            }
+
+            .custom-modal-actions {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -334,6 +444,17 @@
         </div>
     </div>
 
+    <div class="custom-modal-overlay" id="confirmModal">
+        <div class="custom-modal">
+            <h3 id="modalTitle">Confirmação</h3>
+            <p id="modalMessage">Tem certeza que deseja continuar?</p>
+            <div class="custom-modal-actions">
+                <button class="confirm-btn" id="modalConfirmBtn">Confirmar</button>
+                <button class="cancel-btn" id="modalCancelBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const totalValueSpan = document.getElementById('total-value');
         const addForm = document.getElementById('add-form');
@@ -349,10 +470,34 @@
         const listNavBtn = document.getElementById('list-nav-btn');
         const chartsNavBtn = document.getElementById('charts-nav-btn');
 
+        // Elementos do Modal Personalizado
+        const confirmModal = document.getElementById('confirmModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+
         let items = JSON.parse(localStorage.getItem('currentTripItems')) || [];
         let trips = JSON.parse(localStorage.getItem('previousTrips')) || [];
 
         let myChart;
+
+        // Função para exibir o modal personalizado
+        function showCustomConfirm(title, message, onConfirm) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            confirmModal.classList.add('visible');
+
+            modalConfirmBtn.onclick = () => {
+                confirmModal.classList.remove('visible');
+                onConfirm(true);
+            };
+
+            modalCancelBtn.onclick = () => {
+                confirmModal.classList.remove('visible');
+                onConfirm(false);
+            };
+        }
 
         function renderItems() {
             itemList.innerHTML = '';
@@ -449,10 +594,16 @@
         });
         
         clearListBtn.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja limpar a lista atual?')) {
-                items = [];
-                renderItems();
-            }
+            showCustomConfirm(
+                'Limpar Lista Atual',
+                'Tem certeza que deseja limpar todos os itens da lista atual?',
+                (confirmed) => {
+                    if (confirmed) {
+                        items = [];
+                        renderItems();
+                    }
+                }
+            );
         });
         
         previousTripsList.addEventListener('click', (event) => {
@@ -461,11 +612,17 @@
                 const index = parseInt(target.dataset.index);
                 const tripToLoad = trips[index];
                 
-                if (confirm(`Deseja carregar a feira de ${tripToLoad.date}? A lista atual será perdida.`)) {
-                    items = tripToLoad.items;
-                    renderItems();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
+                showCustomConfirm(
+                    `Carregar Feira de ${tripToLoad.date}`,
+                    `Tem certeza que deseja carregar esta feira? A lista atual será substituída.`,
+                    (confirmed) => {
+                        if (confirmed) {
+                            items = tripToLoad.items;
+                            renderItems();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }
+                );
             }
         });
 
