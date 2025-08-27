@@ -43,7 +43,7 @@
             align-items: center;
             min-height: 100vh;
             color: var(--text-color);
-            position: relative; /* Para o modal */
+            position: relative;
         }
 
         .container {
@@ -94,7 +94,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 25px;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
         }
         
         .add-item-form input {
@@ -106,9 +106,10 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
+        /* Ajustes iniciais para inputs, serão sobrescritos por media query em telas pequenas */
         #item-name { flex: 2; }
-        #item-price { width: 90px; }
-        #item-quantity { width: 90px; }
+        #item-price { width: 90px; } /* Largura fixa para telas maiores */
+        #item-quantity { width: 90px; } /* Largura fixa para telas maiores */
         
         .add-item-form input:focus {
             outline: none;
@@ -168,16 +169,24 @@
         .item-details {
             display: flex;
             flex-direction: column;
+            flex-grow: 1; /* Permite que os detalhes do item ocupem o espaço disponível */
         }
 
         .item-details .name {
             font-weight: 600;
             font-size: 1.1em;
+            word-break: break-word; /* Quebra palavras longas */
         }
 
         .item-details .price {
             font-size: 0.9em;
             color: #6b7280;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0; /* Impede que os botões diminuam */
         }
 
         .item-actions button {
@@ -187,6 +196,7 @@
             font-size: 1.2em;
             margin-left: 10px;
             transition: color 0.3s, transform 0.2s;
+            padding: 5px; /* Adicionado padding para facilitar o clique em mobile */
         }
 
         .item-actions .toggle-btn { color: var(--primary-color); }
@@ -203,6 +213,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap; /* Permite que os botões quebrem em telas pequenas */
         }
 
         .action-buttons button, .nav-buttons button {
@@ -239,8 +250,14 @@
             margin-bottom: 8px;
             background-color: #fdfdfd;
             font-size: 0.95em;
+            flex-wrap: wrap; /* Permite que o conteúdo da viagem quebre */
         }
         
+        .trip-item > div {
+            flex-grow: 1; /* Permite que o texto ocupe o espaço */
+            margin-right: 10px; /* Espaço entre texto e botão */
+        }
+
         .trip-item .trip-total {
             font-weight: 600;
         }
@@ -254,6 +271,7 @@
             cursor: pointer;
             font-size: 0.8em;
             transition: background-color 0.3s;
+            flex-shrink: 0; /* Evita que o botão diminua em telas pequenas */
         }
         
         .trip-item button:hover {
@@ -262,6 +280,7 @@
 
         .screen {
             display: none;
+            padding-top: 0px; /* Ajuste para dar mais espaço acima do conteúdo */
         }
 
         .screen.active {
@@ -270,10 +289,11 @@
 
         .nav-buttons {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px; /* Ajustado para um pouco mais de respiro */
+            right: 15px; /* Ajustado para um pouco mais de respiro */
             display: flex;
-            gap: 10px;
+            gap: 8px; /* Reduzido o gap para telas menores */
+            z-index: 10; /* Garante que os botões fiquem acima de outros elementos */
         }
 
         /* Estilos do Modal Personalizado */
@@ -367,27 +387,95 @@
         }
 
 
+        /* Media query para telas de celular (até 480px de largura) */
         @media (max-width: 480px) {
-            .add-item-form {
-                flex-direction: column; /* Volta para coluna em telas muito pequenas */
-                gap: 5px;
+            body {
+                padding: 15px; /* Reduzir o padding geral do corpo */
             }
 
-            .add-item-form input, .add-item-form button {
-                width: 100%;
-                margin-top: 0; /* Remove margem extra */
+            .container {
+                padding: 30px 20px; /* Ajustar padding do container */
+                border-radius: 15px; /* Suavizar os cantos */
             }
 
-            #item-name { width: 100%; }
-            #item-price { width: 100%; }
-            #item-quantity { width: 100%; }
+            h1 {
+                font-size: 2em; /* Reduzir tamanho do título principal */
+                margin-top: 10px; /* Ajustar margem superior */
+            }
             
+            .nav-buttons {
+                position: static; /* Remove a posição absoluta */
+                margin-bottom: 20px; /* Adiciona margem abaixo dos botões de navegação */
+                justify-content: space-around; /* Distribui os botões igualmente */
+                width: 100%;
+            }
+
+            .nav-buttons button {
+                flex: 1; /* Faz os botões ocuparem espaço igual */
+                padding: 10px 15px; /* Ajusta o padding */
+                font-size: 0.9em; /* Reduz o tamanho da fonte */
+                white-space: nowrap; /* Evita que o texto do botão quebre */
+            }
+
+            .total-display {
+                font-size: 1.5em; /* Reduz o tamanho da fonte do total */
+                padding: 15px;
+            }
+
+            .add-item-form {
+                flex-direction: column; /* Coloca os inputs um abaixo do outro */
+                gap: 10px; /* Espaçamento entre os campos */
+            }
+
+            .add-item-form input,
+            .add-item-form button {
+                width: 100%; /* Fazem os campos ocuparem a largura total */
+                flex: none; /* Remove a flexibilidade */
+            }
+            
+            .add-item-form button {
+                margin-top: 5px; /* Adiciona uma pequena margem superior no botão */
+            }
+
+            .item {
+                flex-direction: column; /* Coloca detalhes e ações em linhas separadas */
+                align-items: flex-start; /* Alinha o conteúdo à esquerda */
+                padding: 12px;
+            }
+
+            .item-details {
+                margin-bottom: 10px; /* Espaço entre os detalhes e as ações */
+            }
+
+            .item-actions {
+                width: 100%; /* Ocupa a largura total para os botões */
+                justify-content: flex-end; /* Alinha os botões à direita */
+            }
+            
+            .action-buttons button {
+                width: 100%; /* Faz os botões de ação ocuparem a largura total */
+            }
+
+            .trip-item {
+                flex-direction: column; /* Coloca data/total e botão em linhas separadas */
+                align-items: flex-start;
+            }
+
+            .trip-item > div {
+                margin-bottom: 10px; /* Espaço entre o texto e o botão */
+            }
+
+            .trip-item button {
+                width: 100%; /* Faz o botão ocupar a largura total */
+            }
+
             .custom-modal {
                 padding: 20px;
+                width: 85%; /* Ajusta a largura do modal em telas pequenas */
             }
 
             .custom-modal-actions {
-                flex-direction: column;
+                flex-direction: column; /* Botões de ação do modal um abaixo do outro */
                 gap: 10px;
             }
         }
